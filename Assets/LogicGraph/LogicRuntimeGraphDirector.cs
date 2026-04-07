@@ -12,7 +12,7 @@ namespace LogicGraph.Runtime
     {
         [Header("Graph")]
         [SerializeField]
-        private LogicRuntimeGraph RuntimeGraph;
+        internal LogicRuntimeGraph RuntimeGraph;
 
         [NonSerialized]
         private LogicRuntimeGraph? runtimeCopyOfGraph;

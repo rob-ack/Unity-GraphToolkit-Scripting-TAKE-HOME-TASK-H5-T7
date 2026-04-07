@@ -64,22 +64,6 @@ namespace LogicGraph.Editor.Asset
             // This allows the same asset to be used in inspectors wherever a runtime asset is expected.
             ctx.AddObjectToAsset("RuntimeAsset", runtimeAsset);
             ctx.SetMainObject(runtimeAsset);
-
-            try
-            {
-                //serialize to json with newtonsoft with references preserved to avoid duplicated references. such json could be loaded back.
-                var json = JsonUtility.ToJson(runtimeAsset, true);
-                var jsonAsset = new TextAsset(json);
-                //make visible in inspector for debugging purposes
-                jsonAsset.hideFlags = HideFlags.None;
-                //save to disk for debugging purposes
-                var jsonPath = System.IO.Path.ChangeExtension(ctx.assetPath, "runtime.json");
-                System.IO.File.WriteAllText(jsonPath, json);
-            }
-            catch (Exception e)
-            {
-                Debug.LogWarning($"Failed to serialize runtime asset to JSON: {e.Message}");
-            }
         }
     }
 }
