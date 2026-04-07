@@ -2,28 +2,33 @@
 
 ## Introduction
 
-This tool is a **very simple implementation of a Graph based scripting tool**. The minimal goal was to allow creation and manipultation of primitives or prefabs in position, rotation, or scale.
+This tool is a **simple implementation of a Graph-based scripting tool**. The goal was to allow creation and manipulation of primitives or prefabs with control over position, rotation, and scale.
 
-The implementation showcases how to use ``Graph Toolkit 0.4.0-exp2`` experimental to implement a visual graph tool to allow such operations.
+The implementation showcases how to use the experimental ``Graph Toolkit 0.4.0-exp2`` package to create a visual graph tool for these operations.
 
-Simple Sample Graph. ![Graph](./docs/SimpleGraphScreenshot.png)
-Simple Sample Graph runtime result.![GraphRun](./docs/SimpleGraphOutput.gif)
+Simple Sample Graph:
+![Graph](./docs/SimpleGraphScreenshot.png)
 
-## Design
+Simple Sample Graph runtime result:
+![GraphRun](./docs/SimpleGraphOutput.gif)
+
+## Overview
 
 The implementation follows separation of a ``Design-Time`` and a ``Runtime`` graph data model.
 
-The ``Design-Time`` graph data model is utilising ``Graph Toolkit`` package and contains all nodes and its connections as well as constants, variables, portals and subgraphs.
+The ``Design-Time`` graph data model uses the ``Graph Toolkit`` package and contains all nodes and their connections, along with constants, variables, portals, and subgraphs.
 
-The ``Runtime`` graph data model is a custom implementation and is mainly a precompiled result of Design-Time nodes converted into runtime nodes.
-This graph ``conversion`` is performed in a Design-Time compilation step which mainly runs in two stages (convert and link stage). During Runtime a Load stage will prepare the runtime for fast performant execution.
+The ``Runtime`` graph data model is a custom implementation and is a result of Design-Time nodes converted into runtime nodes.
+This graph ``conversion`` is performed in a Design-Time compilation step which mainly runs in two stages (convert and link stage). During Runtime a Load stage will prepare additional information for fast performant execution.
 
 ***The Conversion stage*** creates one or more operations per Design-Time node which also can perform additional link steps during the link stage.
-The operations execute at runtime and drive synchronus or asynchronus logic: i.e. Set, Get, Create, If, While, For, Delay, etc...
+The operations execute at runtime and drives synchronous or asynchronous logic: for example, Set, Get, Create, If, While, For, Delay, etc.
 
-***The Link stage*** will performe additional conversion steps after every node in the graph was converted. Additional information can be build and stored such as: Node relation, Member Value transfer, Execution flow, Event Bindings, etc...
+***The Link stage*** performs additional conversion steps after every design-time node in the graph has been converted. Additional information can be built and stored, such as node relations, member value transfer, execution flow, and event bindings.
 
-***The Runtime Load stage*** is an additional ``Runtime`` stage and will precompute none serializeable operations such as fast ``expression trees``. Such expression trees are used to dynamically resolve and precompute, how transfer of data input and data output is handled between nodes.
+***The Runtime Load stage*** is an additional ``Runtime`` stage that precomputes non-serializable operations such as fast ``expression trees``. These expression trees for example dynamically define how data transfer between nodes is handled.
+
+***Runtime Execution*** is performed by a given director ``Monobehaviour`` that starts during play time. It runs the start node each graph defines. The graph then executes as long as nodes continue to execute and ends when all nodes have been executed along graph the defined execution flow.
 
 ## Features
 
@@ -33,12 +38,11 @@ The operations execute at runtime and drive synchronus or asynchronus logic: i.e
 - Branching
 - Get/Set Game Object position, rotation, scale
 
-## Node Code Example
+## Code Example
 
-Manually create a design-time and runtime node to add rotation to an game object.
-
+This shows how to manually create a design-time node model and provide runtime node conversion for a add rotation to a game object node.
 ```c#
-//This node implements design time data model and conversion logic
+//This node implements design time data model and conversion logic for runtime node
 [Serializable]
 class RotateObjectNode : AbstractNode, IRuntimeNodeConverter
 {
@@ -53,14 +57,14 @@ class RotateObjectNode : AbstractNode, IRuntimeNodeConverter
 
     void IRuntimeNodeConverter.Convert(ICompilationStageContext context, IExecutionBuilder executionBuilder)
     {
-        //try to resolve constant pin inputs
+        //try to resolve constant data from pin inputs
         var targetInputPort = GetInputPortByName(nameof(RotateObjectRuntimeNode.Target));
         bool isTargetInputSet = targetInputPort.TryGetCompileTimeInputPortValue<GameObject>(out var target);
 
         var rotationInputPort = GetInputPortByName(nameof(RotateObjectRuntimeNode.Rotation));
         bool isRotationInputSet = rotationInputPort.TryGetCompileTimeInputPortValue<Vector3>(out var rotation);
         
-        //maybe add runtime Get for dynamic pin inputs
+        //for non constant inputs register ports to build runtime Get calls for connected target pins
         List<IPort> portsToBind = new ();
         if (!isTargetInputSet)
         {
@@ -80,7 +84,7 @@ class RotateObjectNode : AbstractNode, IRuntimeNodeConverter
                    };
 
         executionBuilder
-            //push operation that may Get the runtime values from inputs. this can be null and will result in noop if not needed
+            //push operation that Get the runtime values from inputs. this can be null and will result in noop if not needed
            .PushExecution(executionBuilder.OperationFactory.CreateRuntimeGetMemberValuesOperation(node, portsToBind.ToArray()))
             //push the runtime implementation execution
            .PushExecution(node)
@@ -92,7 +96,7 @@ class RotateObjectNode : AbstractNode, IRuntimeNodeConverter
 } 
 ```
 
-Show how to build a corresponding runtime implementation.
+This shows how to build the corresponding runtime implementation:
 ```c#
 //class implements both instance data and execution for illustration
 public class RotateObjectRuntimeNode : AbstractRuntimeNode, IRuntimeNodeExecutor<RotateObjectRuntimeNode>
@@ -111,14 +115,13 @@ public class RotateObjectRuntimeNode : AbstractRuntimeNode, IRuntimeNodeExecutor
 }
 ```
 
-
 ## Prerequisites
 
 - Unity 6000.3.2f1
 
-<h2>Improvements:</h2>
+## Improvements
 
-- Source Generator to generate nodes for desired API's
-- Refactoring  (Assembly definition files, Nullables, Project cleanup etc..)
-- Readme Design, Design Choices, Problems, Improvements
-- Runtime Debugging
+- Source Generator to generate nodes for desired APIs
+- Refactoring (Assembly definition files, nullables, project cleanup, etc.)
+- Documentation design, design choices, problems, and improvements
+- Runtime debugging
