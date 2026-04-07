@@ -26,12 +26,12 @@ class VectorAddNode : AbstractNode, IRuntimeNodeConverter
         var inPortB = GetInputPortByName(nameof(VectorAddRuntimeNode.B));
 
         List<IPort> portsToBind = new();
-        if (!inPortA.TryGetCompileTimeInputPortValue<Vector3>(out var a))
+        if (!inPortA.TryGetConstantInputPortValue<Vector3>(out var a))
         {
             portsToBind.Add(inPortA);
         }
 
-        if (!inPortB.TryGetCompileTimeInputPortValue<Vector3>(out var b))
+        if (!inPortB.TryGetConstantInputPortValue<Vector3>(out var b))
         {
             portsToBind.Add(inPortB);
         }

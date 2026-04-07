@@ -64,7 +64,7 @@ class SetValueNode : AbstractBlockNode, IRuntimeNodeConverter
         object value = null; //TODO: issue boxing
 
         List<IPort> portsToBind = new();
-        if (!inputPortSource.TryGetCompileTimeInputPortValue<GameObject>(out var source))
+        if (!inputPortSource.TryGetConstantInputPortValue<GameObject>(out var source))
         {
             portsToBind.Add(inputPortSource);
         }
@@ -72,7 +72,7 @@ class SetValueNode : AbstractBlockNode, IRuntimeNodeConverter
         switch (memberValueToRead)
         {
             case SupportedValues.Position:
-                if (inputPortValue.TryGetCompileTimeInputPortValue<Vector3>(out var position))
+                if (inputPortValue.TryGetConstantInputPortValue<Vector3>(out var position))
                 {
                     value = position;
                 }
@@ -82,7 +82,7 @@ class SetValueNode : AbstractBlockNode, IRuntimeNodeConverter
                 }
                 break;
             case SupportedValues.Rotation:
-                if (inputPortValue.TryGetCompileTimeInputPortValue<Quaternion>(out var rotation))
+                if (inputPortValue.TryGetConstantInputPortValue<Quaternion>(out var rotation))
                 {
                     value = rotation;
                 }
@@ -92,7 +92,7 @@ class SetValueNode : AbstractBlockNode, IRuntimeNodeConverter
                 }
                 break;
             case SupportedValues.Scale:
-                if (inputPortValue.TryGetCompileTimeInputPortValue<Vector3>(out var scale))
+                if (inputPortValue.TryGetConstantInputPortValue<Vector3>(out var scale))
                 {
                     value = scale;
                 }

@@ -12,7 +12,7 @@ public static class PortExtensions
     /// 2. Embedded value on the port<br/>
     /// 3. Default value of the port<br/>
     /// </summary>
-    public static bool TryGetCompileTimeInputPortValue<T>(this IPort port, out T value)
+    public static bool TryGetConstantInputPortValue<T>(this IPort port, out T value)
     {
         // If port is connected to another node, get value from connection
         if (port.isConnected)

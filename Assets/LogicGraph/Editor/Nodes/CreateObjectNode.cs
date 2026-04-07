@@ -50,7 +50,7 @@ class CreateObjectNode : AbstractNode, IRuntimeNodeConverter
         dynamicEvaluatedPort = null;
         var inputPort = GetInputPortByName(nameof(CreatePrimitiveObjectRuntimeNode.PrimitiveType));
         //try to evaluate the input port value at compile time, if possible
-        bool isInputSet = inputPort.TryGetCompileTimeInputPortValue<PrimitiveType>(out var primitiveTypeGetInputPortByName);
+        bool isInputSet = inputPort.TryGetConstantInputPortValue<PrimitiveType>(out var primitiveTypeGetInputPortByName);
 
         var node = new CreatePrimitiveObjectRuntimeNode
                                                {
@@ -69,7 +69,7 @@ class CreateObjectNode : AbstractNode, IRuntimeNodeConverter
         dynamicEvaluatedPort = null;
         var inputPort = GetInputPortByName(nameof(CreatePrefabeRuntimeNode.Prefab));
         //try to evaluate the input port value at compile time, if possible
-        bool isInputSet = inputPort.TryGetCompileTimeInputPortValue<GameObject>(out var prefab);
+        bool isInputSet = inputPort.TryGetConstantInputPortValue<GameObject>(out var prefab);
 
         var node = new CreatePrefabeRuntimeNode
                    {

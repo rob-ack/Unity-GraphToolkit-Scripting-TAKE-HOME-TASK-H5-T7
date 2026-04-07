@@ -21,7 +21,7 @@ class DelayNode : AbstractNode, IRuntimeNodeConverter
     {
         var delayInputPort = GetInputPortByName(nameof(DelayRuntimeNode.Delay));
         List<IPort> portsToBind = new();
-        if (!delayInputPort.TryGetCompileTimeInputPortValue<float>(out var delay))
+        if (!delayInputPort.TryGetConstantInputPortValue<float>(out var delay))
         {
             portsToBind.Add(delayInputPort);
         }

@@ -21,10 +21,10 @@ class RotateObjectNode : AbstractNode, IRuntimeNodeConverter
     void IRuntimeNodeConverter.Convert(ICompilationStageContext context, IExecutionBuilder executionBuilder)
     {
         var targetInputPort = GetInputPortByName(nameof(RotateObjectRuntimeNode.Target));
-        bool isTargetInputSet = targetInputPort.TryGetCompileTimeInputPortValue<GameObject>(out var target);
+        bool isTargetInputSet = targetInputPort.TryGetConstantInputPortValue<GameObject>(out var target);
 
         var rotationInputPort = GetInputPortByName(nameof(RotateObjectRuntimeNode.Rotation));
-        bool isRotationInputSet = rotationInputPort.TryGetCompileTimeInputPortValue<Vector3>(out var rotation);
+        bool isRotationInputSet = rotationInputPort.TryGetConstantInputPortValue<Vector3>(out var rotation);
 
         List<IPort> portsToBind = new ();
         if (!isTargetInputSet)

@@ -68,7 +68,7 @@ class GetValueNode : AbstractBlockNode, IRuntimeNodeConverter
     {
         var inputPort = contextNode.GetInputPortByName(nameof(GameObjectContextNode.Source));
         //try to evaluate the input port value at compile time, if possible
-        bool isInputSet = inputPort.TryGetCompileTimeInputPortValue<GameObject>(out var source);
+        bool isInputSet = inputPort.TryGetConstantInputPortValue<GameObject>(out var source);
 
         var node = new GetValueRuntimeNode
                    {

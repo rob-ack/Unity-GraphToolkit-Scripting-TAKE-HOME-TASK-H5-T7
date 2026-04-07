@@ -37,7 +37,7 @@ class IfNode : AbstractNode, IRuntimeNodeConverter
     public void Convert(ICompilationStageContext context, IExecutionBuilder executionBuilder)
     {
         var conditionInputPort = GetInputPortByName(nameof(IfRuntimeNode.Condition));
-        bool isInputSet = conditionInputPort.TryGetCompileTimeInputPortValue<bool>(out var condition);
+        bool isInputSet = conditionInputPort.TryGetConstantInputPortValue<bool>(out var condition);
 
         List<IPort> portsToBind = new();
         if (!isInputSet)
